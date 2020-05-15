@@ -4,8 +4,10 @@
 
 # combine_tessdata -u vie.traineddata vie.
 
+# set_unicharset_properties -U vie.unicharset -O new_unicharset --script_dir=langdata
+
 TESSDATA_DIR=./tessdata_best
-LANG=vie
+LANG=eng
 TRAINNED_DATA=${LANG}.traineddata
 TRAINNED_TEXT=./vie.fullnames.training_text
 NAME=fullnames
