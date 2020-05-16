@@ -49,38 +49,36 @@ rm -rf $MODEL_EVAL_DIR
 --output_dir $MODEL_EVAL_DIR
 
 
-# # step 2
-# combine_tessdata -e $TRAINNED_DATA \
-# $TESSDATA_DIR/${MODEL}.lstm
+# step 2
+combine_tessdata -e $TRAINNED_DATA \
+$TESSDATA_DIR/${MODEL}.lstm
 
-# # step 3
-# rm -rf  ${MODEL_OUTPUT_DIR}
-# mkdir  ${MODEL_OUTPUT_DIR}
-# lstmtraining \
-# --model_output ${MODEL_OUTPUT_DIR}/${OUTPUT}_plus \
-# --traineddata $FINE_TUNE_TRAINED_DATA \
-# --continue_from $TESSDATA_DIR/${MODEL}.lstm \
-# --old_traineddata $TRAINNED_DATA \
-# --train_listfile ${MODEL_EVAL_DIR}/${MODEL}.training_files.txt \
-# --debug_interval 0 \
-# --max_iterations $ITER
-
-
-# # step 4
-# # best model from checkpoint
-# lstmtraining \
-# --stop_training \
-# --traineddata $FINE_TUNE_TRAINED_DATA \
-# --continue_from ${MODEL_OUTPUT_DIR}/${OUTPUT}_plus_checkpoint \
-# --model_output ${MODEL_OUTPUT_DIR}/${OUTPUT}.traineddata
-
-# # step 5
-# # fast model from checkpoint
-# lstmtraining \
-# --stop_training \
-# --convert_to_int \
-# --traineddata $FINE_TUNE_TRAINED_DATA \
-# --continue_from ${MODEL_OUTPUT_DIR}/${OUTPUT}_plus_checkpoint \
-# --model_output ${MODEL_OUTPUT_DIR}/${OUTPUT}_int.traineddata
+# step 3
+rm -rf  ${MODEL_OUTPUT_DIR}
+mkdir  ${MODEL_OUTPUT_DIR}
+lstmtraining \
+--model_output ${MODEL_OUTPUT_DIR}/${OUTPUT}_plus \
+--traineddata $FINE_TUNE_TRAINED_DATA \
+--continue_from $TESSDATA_DIR/${MODEL}.lstm \
+--old_traineddata $TRAINNED_DATA \
+--train_listfile ${MODEL_EVAL_DIR}/${MODEL}.training_files.txt \
+--debug_interval 0 \
+--max_iterations $ITER
 
 
+# step 4
+# best model from checkpoint
+lstmtraining \
+--stop_training \
+--traineddata $FINE_TUNE_TRAINED_DATA \
+--continue_from ${MODEL_OUTPUT_DIR}/${OUTPUT}_plus_checkpoint \
+--model_output ${MODEL_OUTPUT_DIR}/${OUTPUT}.traineddata
+
+# step 5
+# fast model from checkpoint
+lstmtraining \
+--stop_training \
+--convert_to_int \
+--traineddata $FINE_TUNE_TRAINED_DATA \
+--continue_from ${MODEL_OUTPUT_DIR}/${OUTPUT}_plus_checkpoint \
+--model_output ${MODEL_OUTPUT_DIR}/${OUTPUT}_int.traineddata
