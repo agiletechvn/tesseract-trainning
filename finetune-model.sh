@@ -1,6 +1,6 @@
 #!/bin/bash
 
-while getopts "m:o:f:" opt; do
+while getopts "m:o:f:i:" opt; do
   case "$opt" in
     m)  MODEL=$OPTARG
     ;;
@@ -8,19 +8,19 @@ while getopts "m:o:f:" opt; do
     ;;   
     f)  FONT=$OPTARG
     ;;
+    i)  ITER=$OPTARG
+    ;;
   esac
 done
 
 : ${MODEL:="eng"}
 : ${OUTPUT:="date"}
 : ${FONT:="Arial"}
-
+: ${ITER:=1000}
 
 TESSDATA_DIR=./tessdata_best
-# TRAINNED_DATA=$TESSDATA_DIR/digits.traineddata
 TRAINNED_DATA=$TESSDATA_DIR/${MODEL}.traineddata
 TRAINNED_TEXT=./${MODEL}.$OUTPUT.training_text
-# TRAINNED_TEXT=./${MODEL}.MRZ.training_text
 
 
 rm -rf ./${OUTPUT}
@@ -37,30 +37,31 @@ rm -rf ./${OUTPUT}
 --workspace_dir ./tmp \
 --output_dir ./${OUTPUT}
 
-#  echo "/n ****** Finetune plus tessdata_best/${MODEL} model ***********"
+echo "/n ****** Finetune plus tessdata_best/${MODEL} model ***********"
 
-rm -rf  ./${OUTPUT}
-mkdir  ./${OUTPUT}
+MODEL_OUTPUT_DIR=./output/${OUTPUT}_plus
+rm -rf  ${MODEL_OUTPUT_DIR}
+mkdir  ${MODEL_OUTPUT_DIR}
 
 combine_tessdata -e $TRAINNED_DATA \
 $TESSDATA_DIR/${MODEL}.lstm
 
 lstmtraining \
---model_output ./${OUTPUT}/${OUTPUT} \
+--model_output ${MODEL_OUTPUT_DIR}/${OUTPUT}_plus \
 --traineddata ./${OUTPUT}/${MODEL}/${MODEL}.traineddata \
 --continue_from $TESSDATA_DIR/${MODEL}.lstm \
 --old_traineddata $TRAINNED_DATA \
 --train_listfile ./${OUTPUT}/${MODEL}.training_files.txt \
 --debug_interval 0 \
---max_iterations 2000
+--max_iterations $ITER
 
 
 # best model from checkpoint
 lstmtraining \
 --stop_training \
 --traineddata ./${OUTPUT}/${MODEL}/${MODEL}.traineddata \
---continue_from ./${OUTPUT}/${OUTPUT}_checkpoint \
---model_output ./${OUTPUT}/${OUTPUT}.traineddata
+--continue_from ${MODEL_OUTPUT_DIR}/${OUTPUT}_plus_checkpoint \
+--model_output ${MODEL_OUTPUT_DIR}/${OUTPUT}.traineddata
 
 
 # fast model from checkpoint
@@ -68,7 +69,7 @@ lstmtraining \
 --stop_training \
 --convert_to_int \
 --traineddata ./${OUTPUT}/${MODEL}/${MODEL}.traineddata \
---continue_from ./${OUTPUT}/${OUTPUT}_checkpoint \
---model_output ./${OUTPUT}/${OUTPUT}_int.traineddata
+--continue_from ${MODEL_OUTPUT_DIR}/${OUTPUT}_plus_checkpoint \
+--model_output ${MODEL_OUTPUT_DIR}/${OUTPUT}_int.traineddata
 
 
