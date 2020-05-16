@@ -21,10 +21,13 @@ done
 TESSDATA_DIR=./tessdata_best
 TRAINNED_DATA=$TESSDATA_DIR/${MODEL}.traineddata
 TRAINNED_TEXT=./${MODEL}.$OUTPUT.training_text
+MODEL_OUTPUT_DIR=./output/${OUTPUT}_plus
 
 
 echo "/n ****** Finetune plus tessdata_best/${MODEL} model ${FONT} ***********"
 
+# step 1
+node generate_training_text.js -t $OUTPUT
 rm -rf ./${OUTPUT}
 ./tesstrain.sh \
 --fonts_dir ./.fonts \
@@ -40,14 +43,14 @@ rm -rf ./${OUTPUT}
 --output_dir ./${OUTPUT}
 
 
-
-MODEL_OUTPUT_DIR=./output/${OUTPUT}_plus
+# step 2
 rm -rf  ${MODEL_OUTPUT_DIR}
 mkdir  ${MODEL_OUTPUT_DIR}
 
 combine_tessdata -e $TRAINNED_DATA \
 $TESSDATA_DIR/${MODEL}.lstm
 
+# step 3
 lstmtraining \
 --model_output ${MODEL_OUTPUT_DIR}/${OUTPUT}_plus \
 --traineddata ./${OUTPUT}/${MODEL}/${MODEL}.traineddata \
@@ -58,6 +61,7 @@ lstmtraining \
 --max_iterations $ITER
 
 
+# step 4
 # best model from checkpoint
 lstmtraining \
 --stop_training \
@@ -65,7 +69,7 @@ lstmtraining \
 --continue_from ${MODEL_OUTPUT_DIR}/${OUTPUT}_plus_checkpoint \
 --model_output ${MODEL_OUTPUT_DIR}/${OUTPUT}.traineddata
 
-
+# step 5
 # fast model from checkpoint
 lstmtraining \
 --stop_training \

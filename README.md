@@ -9,4 +9,4 @@ make all && make install
 
 ## Train custom data
 
-`./finetune-model.sh -m eng -f '"Arial"' -o digits`
+`./finetune-model.sh -m eng -f 'Arial' -o digits`
