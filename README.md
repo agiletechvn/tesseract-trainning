@@ -9,4 +9,7 @@ make all && make install
 
 ## Train custom data
 
-`./finetune-model.sh -m eng -f 'Arial' -o digits`
+```bash
+# use fc-scan font.ttf  | grep fullname:
+./finetune-model.sh -m eng -f "Arial" -f "Droid Serif" -o digits
+```
