@@ -23,6 +23,8 @@ TRAINNED_DATA=$TESSDATA_DIR/${MODEL}.traineddata
 TRAINNED_TEXT=./${MODEL}.$OUTPUT.training_text
 
 
+echo "/n ****** Finetune plus tessdata_best/${MODEL} model ${FONT} ***********"
+
 rm -rf ./${OUTPUT}
 ./tesstrain.sh \
 --fonts_dir ./.fonts \
@@ -37,7 +39,7 @@ rm -rf ./${OUTPUT}
 --workspace_dir ./tmp \
 --output_dir ./${OUTPUT}
 
-echo "/n ****** Finetune plus tessdata_best/${MODEL} model ***********"
+
 
 MODEL_OUTPUT_DIR=./output/${OUTPUT}_plus
 rm -rf  ${MODEL_OUTPUT_DIR}
