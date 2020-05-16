@@ -20,15 +20,16 @@ done
 
 TESSDATA_DIR=./tessdata_best
 TRAINNED_DATA=$TESSDATA_DIR/${MODEL}.traineddata
-TRAINNED_TEXT=./${MODEL}.$OUTPUT.training_text
+TRAINNED_TEXT=./output/${MODEL}.$OUTPUT.training_text
 MODEL_OUTPUT_DIR=./output/${OUTPUT}_plus
-
+MODEL_EVAL_DIR=./output/${OUTPUT}
+FINE_TUNE_TRAINED_DATA=${MODEL_EVAL_DIR}/${MODEL}/${MODEL}.traineddata
 
 echo "/n ****** Finetune plus tessdata_best/${MODEL} model ${FONT} ***********"
 
 # step 1
-node generate_training_text.js -t $OUTPUT
-rm -rf ./${OUTPUT}
+node generate_training_text.js -t $OUTPUT -o $TRAINNED_TEXT
+rm -rf $MODEL_EVAL_DIR
 ./tesstrain.sh \
 --fonts_dir ./.fonts \
 --lang ${MODEL} --linedata_only \
@@ -40,7 +41,7 @@ rm -rf ./${OUTPUT}
 --fontlist $FONT \
 --training_text $TRAINNED_TEXT \
 --workspace_dir ./tmp \
---output_dir ./${OUTPUT}
+--output_dir $MODEL_EVAL_DIR
 
 
 # step 2
@@ -53,7 +54,7 @@ $TESSDATA_DIR/${MODEL}.lstm
 # step 3
 lstmtraining \
 --model_output ${MODEL_OUTPUT_DIR}/${OUTPUT}_plus \
---traineddata ./${OUTPUT}/${MODEL}/${MODEL}.traineddata \
+--traineddata $FINE_TUNE_TRAINED_DATA \
 --continue_from $TESSDATA_DIR/${MODEL}.lstm \
 --old_traineddata $TRAINNED_DATA \
 --train_listfile ./${OUTPUT}/${MODEL}.training_files.txt \
@@ -65,7 +66,7 @@ lstmtraining \
 # best model from checkpoint
 lstmtraining \
 --stop_training \
---traineddata ./${OUTPUT}/${MODEL}/${MODEL}.traineddata \
+--traineddata $FINE_TUNE_TRAINED_DATA \
 --continue_from ${MODEL_OUTPUT_DIR}/${OUTPUT}_plus_checkpoint \
 --model_output ${MODEL_OUTPUT_DIR}/${OUTPUT}.traineddata
 
@@ -74,7 +75,7 @@ lstmtraining \
 lstmtraining \
 --stop_training \
 --convert_to_int \
---traineddata ./${OUTPUT}/${MODEL}/${MODEL}.traineddata \
+--traineddata $FINE_TUNE_TRAINED_DATA \
 --continue_from ${MODEL_OUTPUT_DIR}/${OUTPUT}_plus_checkpoint \
 --model_output ${MODEL_OUTPUT_DIR}/${OUTPUT}_int.traineddata
 

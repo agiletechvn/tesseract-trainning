@@ -8,6 +8,11 @@ const argv = yargs
     description: 'Type of data',
     type: 'string',
   })
+  .option('output', {
+    alias: 'o',
+    description: 'Ouput file',
+    type: 'string',
+  })
   .help()
   .alias('help', 'h').argv;
 
@@ -67,15 +72,12 @@ const actions = {
       console.error(err);
     });
     arr.forEach(function (v) {
-      file.write('0');
       file.write(v.join(''));
       file.write('\n');
-      // last and first with space
     });
     file.end();
   },
 };
 
 // trigger
-const filename = `eng.${argv.type}.training_text`;
-actions[argv.type](filename);
+actions[argv.type](argv.output);
