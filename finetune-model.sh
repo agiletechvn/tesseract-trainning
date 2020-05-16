@@ -45,19 +45,18 @@ rm -rf $MODEL_EVAL_DIR
 
 
 # step 2
-rm -rf  ${MODEL_OUTPUT_DIR}
-mkdir  ${MODEL_OUTPUT_DIR}
-
 combine_tessdata -e $TRAINNED_DATA \
 $TESSDATA_DIR/${MODEL}.lstm
 
 # step 3
+rm -rf  ${MODEL_OUTPUT_DIR}
+mkdir  ${MODEL_OUTPUT_DIR}
 lstmtraining \
 --model_output ${MODEL_OUTPUT_DIR}/${OUTPUT}_plus \
 --traineddata $FINE_TUNE_TRAINED_DATA \
 --continue_from $TESSDATA_DIR/${MODEL}.lstm \
 --old_traineddata $TRAINNED_DATA \
---train_listfile ./${OUTPUT}/${MODEL}.training_files.txt \
+--train_listfile ${MODEL_EVAL_DIR}/${MODEL}.training_files.txt \
 --debug_interval 0 \
 --max_iterations $ITER
 
