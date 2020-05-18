@@ -33,6 +33,7 @@ else
     FONTS_DIR="/usr/share/fonts/"
 fi
 
+LIGATURES=false
 DISTORT_IMAGE=false
 EXTRACT_FONT_PROPERTIES=false
 LINEDATA=false
@@ -158,6 +159,8 @@ parse_flags() {
                 i=$j ;;
             --distort_image)
                 DISTORT_IMAGE=true ;;
+            --ligatures)
+                LIGATURES=true ;;
             --output_dir)
                 parse_value "OUTPUT_DIR" ${ARGV[$j]:-}
                 i=$j ;;
@@ -260,6 +263,10 @@ generate_font_image() {
     common_args+=" --outputbase=${outbase} --max_pages=${MAX_PAGES}"
     if $DISTORT_IMAGE; then
         common_args+=" --distort_image "
+    fi
+
+    if $LIGATURES; then
+        common_args+=" --ligatures "
     fi
 
     # add --writing_mode=vertical-upright to common_args if the font is
