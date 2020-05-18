@@ -12,7 +12,7 @@ make all && make install
 ```bash
 # if running
 pkill text2image
-# fc-scan font.ttf  | grep family:
+# text2image --list_available_fonts --fonts_dir .fonts
 # -dlcr : distort_image and ligatures continue remain(no invert)
 ./finetune-model.sh -m eng -f "Arial" -f "Arial Bold" -f "Arial Italic" -f "Arial Bold Italic" -o idcard [-dlcr]
 ```
