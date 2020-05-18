@@ -54,9 +54,9 @@ if $NEW; then
   --workspace_dir ./tmp \
   --output_dir $MODEL_EVAL_DIR $EXTRA_ARGS
 
-  # # step 2
-  # combine_tessdata -e $TRAINNED_DATA \
-  # $TESSDATA_DIR/${MODEL}.lstm
+  # step 2
+  combine_tessdata -e $TRAINNED_DATA \
+  $TESSDATA_DIR/${MODEL}.lstm
 fi
 
 
