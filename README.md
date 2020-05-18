@@ -10,6 +10,6 @@ make all && make install
 ## Train custom data
 
 ```bash
-# use fc-scan font.ttf  | grep fullname:
-./finetune-model.sh -m eng -f "Arial" -f "Droid Serif" -o digits
+# fc-scan font.ttf  | grep family:
+./finetune-model.sh -m eng -f "Arial" -f "Droid Serif" -f "OCRB" -o digits [-d]
 ```
