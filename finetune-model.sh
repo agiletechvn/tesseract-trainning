@@ -5,7 +5,7 @@ FONTS=""
 # use "${FONTS[@]}" to pass array param
 EXTRA_ARGS=""
 
-while getopts "m:o:f:i:d" opt; do  
+while getopts "m:o:f:i:dl" opt; do  
   case "$opt" in
     m )  MODEL=$OPTARG ;;
     o )  OUTPUT=$OPTARG ;;   
@@ -17,6 +17,7 @@ while getopts "m:o:f:i:d" opt; do
     l ) EXTRA_ARGS="$EXTRA_ARGS --ligatures" ;;
   esac
 done
+
 
 : ${MODEL:="eng"}
 : ${OUTPUT:="date"}
@@ -30,7 +31,7 @@ MODEL_OUTPUT_DIR=./output/${OUTPUT}_plus
 MODEL_EVAL_DIR=./output/${OUTPUT}
 FINE_TUNE_TRAINED_DATA=${MODEL_EVAL_DIR}/${MODEL}/${MODEL}.traineddata
 
-echo "****** Finetune plus tessdata_best/${MODEL} model ${FONTS[@]} ***********"
+echo "****** Finetune plus tessdata_best/${MODEL} model ${FONTS[@]} extra ${EXTRA_ARGS} ***********"
 
 # step 1
 node generate_training_text.js -t $OUTPUT -o $TRAINNED_TEXT
@@ -43,12 +44,10 @@ rm -rf $MODEL_EVAL_DIR
 --tessdata_dir $TESSDATA_DIR \
 --exposures "0" \
 --save_box_tiff \
-# --overwrite \
 --fontlist "${FONTS[@]}" \
 --training_text $TRAINNED_TEXT \
 --workspace_dir ./tmp \
---output_dir $MODEL_EVAL_DIR \
-$EXTRA_ARGS
+--output_dir $MODEL_EVAL_DIR $EXTRA_ARGS
 
 
 # step 2

@@ -12,5 +12,5 @@ make all && make install
 ```bash
 # fc-scan font.ttf  | grep family:
 # -dl : distort_image and ligatures
-./finetune-model.sh -m eng -f "Arial" -f "Droid Serif" -f "OCRB" -o digits [-dl]
+./finetune-model.sh -m eng -f "Arial" -f "Arial Italic" -o digits [-dl]
 ```
