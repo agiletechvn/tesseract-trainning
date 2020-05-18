@@ -4,7 +4,7 @@ fn=0
 FONTS=""
 # use "${FONTS[@]}" to pass array param
 EXTRA_ARGS=""
-CONTINUE=""
+NEW=true
 
 while getopts "m:o:f:i:cdl" opt; do  
   case "$opt" in
@@ -14,7 +14,7 @@ while getopts "m:o:f:i:cdl" opt; do
         fn=$((fn+1))                    
         ;;
     i ) ITER=$OPTARG ;;
-    c ) CONTINUE=true ;;
+    c ) NEW=false ;;
     d ) EXTRA_ARGS+=" --distort_image" ;;
     l ) EXTRA_ARGS+=" --ligatures" ;;
   esac
@@ -36,7 +36,7 @@ FINE_TUNE_TRAINED_DATA=${MODEL_EVAL_DIR}/${MODEL}/${MODEL}.traineddata
 echo "****** Finetune plus tessdata_best/${MODEL} model ${FONTS[@]} extra ${EXTRA_ARGS} ***********"
 
 # if continue, do not re-generate
-if ! $CONTINUE; then
+if $NEW; then
   # step 1
   node generate_training_text.js -t $OUTPUT -o $TRAINNED_TEXT
   rm -rf $MODEL_EVAL_DIR
