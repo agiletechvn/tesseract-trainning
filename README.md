@@ -10,6 +10,8 @@ make all && make install
 ## Train custom data
 
 ```bash
+# if running
+pkill text2image
 # fc-scan font.ttf  | grep family:
 # -dl : distort_image and ligatures
 ./finetune-model.sh -m eng -f "Arial" -f "Arial Italic" -o digits [-dl]
