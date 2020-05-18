@@ -14,5 +14,5 @@ make all && make install
 pkill text2image
 # fc-scan font.ttf  | grep family:
 # -dl : distort_image and ligatures
-./finetune-model.sh -m eng -f "Arial" -f "Arial Italic" -o digits [-dl]
+./finetune-model.sh -m eng -f "Arial" -f "Arial Bold" -f "Arial Italic" -f "Arial Bold Italic" -o idcard [-dl]
 ```
