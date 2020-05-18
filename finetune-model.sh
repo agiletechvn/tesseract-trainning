@@ -13,8 +13,8 @@ while getopts "m:o:f:i:dl" opt; do
         fn=$((fn+1))                    
         ;;
     i )  ITER=$OPTARG ;;
-    d ) EXTRA_ARGS="$EXTRA_ARGS --distort_image" ;;
-    l ) EXTRA_ARGS="$EXTRA_ARGS --ligatures" ;;
+    d ) EXTRA_ARGS+=" --distort_image" ;;
+    l ) EXTRA_ARGS+=" --ligatures" ;;
   esac
 done
 
