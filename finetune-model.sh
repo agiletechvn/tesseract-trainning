@@ -4,15 +4,17 @@ fn=0
 FONTS=""
 # use "${FONTS[@]}" to pass array param
 EXTRA_ARGS=""
+CONTINUE=""
 
-while getopts "m:o:f:i:dl" opt; do  
+while getopts "m:o:f:i:cdl" opt; do  
   case "$opt" in
-    m )  MODEL=$OPTARG ;;
-    o )  OUTPUT=$OPTARG ;;   
-    f )  FONTS[$fn]="$OPTARG"
+    m ) MODEL=$OPTARG ;;
+    o ) OUTPUT=$OPTARG ;;   
+    f ) FONTS[$fn]="$OPTARG"
         fn=$((fn+1))                    
         ;;
-    i )  ITER=$OPTARG ;;
+    i ) ITER=$OPTARG ;;
+    c ) CONTINUE=true ;;
     d ) EXTRA_ARGS+=" --distort_image" ;;
     l ) EXTRA_ARGS+=" --ligatures" ;;
   esac
@@ -22,7 +24,7 @@ done
 : ${MODEL:="eng"}
 : ${OUTPUT:="date"}
 : ${FONTS:=("Arial")}
-: ${ITER:=1000}
+: ${ITER:=2000}
 
 TESSDATA_DIR=./tessdata_best
 TRAINNED_DATA=$TESSDATA_DIR/${MODEL}.traineddata
@@ -33,26 +35,29 @@ FINE_TUNE_TRAINED_DATA=${MODEL_EVAL_DIR}/${MODEL}/${MODEL}.traineddata
 
 echo "****** Finetune plus tessdata_best/${MODEL} model ${FONTS[@]} extra ${EXTRA_ARGS} ***********"
 
-# step 1
-node generate_training_text.js -t $OUTPUT -o $TRAINNED_TEXT
-rm -rf $MODEL_EVAL_DIR
-./tesstrain.sh \
---fonts_dir ./.fonts \
---lang ${MODEL} --linedata_only \
---noextract_font_properties \
---langdata_dir ./langdata \
---tessdata_dir $TESSDATA_DIR \
---exposures "0" \
---save_box_tiff \
---fontlist "${FONTS[@]}" \
---training_text $TRAINNED_TEXT \
---workspace_dir ./tmp \
---output_dir $MODEL_EVAL_DIR $EXTRA_ARGS
+# if continue, do not re-generate
+if ! $CONTINUE; then
+  # step 1
+  node generate_training_text.js -t $OUTPUT -o $TRAINNED_TEXT
+  rm -rf $MODEL_EVAL_DIR
+  ./tesstrain.sh \
+  --fonts_dir ./.fonts \
+  --lang ${MODEL} --linedata_only \
+  --noextract_font_properties \
+  --langdata_dir ./langdata \
+  --tessdata_dir $TESSDATA_DIR \
+  --exposures "0" \
+  --save_box_tiff \
+  --fontlist "${FONTS[@]}" \
+  --training_text $TRAINNED_TEXT \
+  --workspace_dir ./tmp \
+  --output_dir $MODEL_EVAL_DIR $EXTRA_ARGS
 
+  # step 2
+  combine_tessdata -e $TRAINNED_DATA \
+  $TESSDATA_DIR/${MODEL}.lstm
+fi
 
-# step 2
-combine_tessdata -e $TRAINNED_DATA \
-$TESSDATA_DIR/${MODEL}.lstm
 
 # step 3
 rm -rf  ${MODEL_OUTPUT_DIR}
