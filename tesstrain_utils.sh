@@ -35,6 +35,7 @@ fi
 
 LIGATURES=false
 DISTORT_IMAGE=false
+REMAIN=false
 EXTRACT_FONT_PROPERTIES=false
 LINEDATA=false
 MAX_PAGES=0
@@ -163,6 +164,8 @@ parse_flags() {
                 i=$j ;;
             --distort_image)
                 DISTORT_IMAGE=true ;;
+            --remain)
+                REMAIN=true;;
             --ligatures)
                 LIGATURES=true ;;
             --output_dir)
@@ -271,7 +274,12 @@ generate_font_image() {
     common_args+=" --outputbase=${outbase} --max_pages=${MAX_PAGES}"
     
     if $DISTORT_IMAGE; then
-        common_args+=" --distort_image --invert=false"
+        common_args+=" --distort_image"
+    fi
+
+    # do not revert
+    if $REMAIN; then
+        common_args+=" --invert=false"
     fi
 
     if $LIGATURES; then

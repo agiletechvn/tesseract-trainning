@@ -6,7 +6,7 @@ FONTS=""
 EXTRA_ARGS=""
 NEW=true
 
-while getopts "m:o:f:i:cdl" opt; do  
+while getopts "m:o:f:i:cdlr" opt; do  
   case "$opt" in
     m ) MODEL=$OPTARG ;;
     o ) OUTPUT=$OPTARG ;;   
@@ -14,9 +14,10 @@ while getopts "m:o:f:i:cdl" opt; do
         fn=$((fn+1))                    
         ;;
     i ) ITER=$OPTARG ;;
-    c ) NEW=false ;;
+    c ) NEW=false ;;    
     d ) EXTRA_ARGS+=" --distort_image" ;;
     l ) EXTRA_ARGS+=" --ligatures" ;;
+    r ) EXTRA_ARGS+=" --remain" ;;
   esac
 done
 
