@@ -20,8 +20,8 @@ const actions = {
   date(filename) {
     // 10 - 80
 
-    const b = dayjs().subtract(10, 'year');
-    let a = b.subtract(80, 'year');
+    const b = dayjs().subtract(20, 'year');
+    let a = b.subtract(30, 'year');
 
     var file = fs.createWriteStream(filename);
     file.on('error', function (err) {
