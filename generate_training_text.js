@@ -80,4 +80,5 @@ const actions = {
 };
 
 // trigger
-actions[argv.type](argv.output);
+const fn = actions[argv.type];
+if (fn) fn(argv.output);
